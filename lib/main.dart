@@ -7,7 +7,7 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       home: Scaffold(
         body: Center(child: MyWidget(label: "Cahya Bagus Sanjaya")),
       ),
@@ -15,23 +15,36 @@ class MainApp extends StatelessWidget {
   }
 }
 
-class MyWidget extends StatelessWidget {
-  final String label;
+typedef ValueChanged<T> = void Function(T value);
 
-  const MyWidget({super.key, required this.label});
+class MyWidget extends StatelessWidget {
+  int _globalCounter = 0;
+  final String label;
+  MyWidget({super.key, required this.label});
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [CounterWidget(init: 5), CounterWidget(init: 9)],
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text('$_globalCounter'),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            CounterWidget(init: 5, onChanged: (c) => _globalCounter + c),
+            CounterWidget(init: 9, onChanged: (c) => _globalCounter + c),
+          ],
+        ),
+      ],
     );
   }
 }
 
 class CounterWidget extends StatefulWidget {
   final int init;
-  const CounterWidget({super.key, required this.init});
+  final ValueChanged<int> onChanged;
+
+  const CounterWidget({super.key, required this.init, required this.onChanged});
 
   @override
   State<StatefulWidget> createState() => _CounterWidgetState(init);
@@ -45,6 +58,8 @@ class _CounterWidgetState extends State<CounterWidget> {
   }
 
   void _increment() {
+    widget.onChanged(1);
+
     setState(() {
       _counter++;
     });
