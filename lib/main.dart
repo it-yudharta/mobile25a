@@ -22,21 +22,27 @@ class MyWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CounterWidget();
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [CounterWidget(init: 5), CounterWidget(init: 9)],
+    );
   }
 }
 
 class CounterWidget extends StatefulWidget {
-  const CounterWidget({super.key});
+  final int init;
+  const CounterWidget({super.key, required this.init});
 
   @override
-  State<StatefulWidget> createState() {
-    return _CounterWidgetState();
-  }
+  State<StatefulWidget> createState() => _CounterWidgetState(init);
 }
 
 class _CounterWidgetState extends State<CounterWidget> {
   int _counter = 0;
+
+  _CounterWidgetState(int init) {
+    _counter = init;
+  }
 
   void _increment() {
     setState(() {
@@ -48,8 +54,9 @@ class _CounterWidgetState extends State<CounterWidget> {
   Widget build(BuildContext context) {
     return Center(
       child: Column(
-        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          Text('$_counter'),
           Text('$_counter'),
           ElevatedButton(onPressed: _increment, child: const Text('Tambah')),
         ],
