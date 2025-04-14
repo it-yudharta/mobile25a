@@ -29,7 +29,11 @@ class HomePage extends StatelessWidget {
                   ),
               child: Text("Detail"),
             ),
-            const Text("Home Page"),
+            const Text("Hom Page"),
+            ElevatedButton(
+              onPressed: () => Navigator.pushNamed(context, "/album"),
+              child: Text("Album"),
+            ),
           ],
         ),
       ),
