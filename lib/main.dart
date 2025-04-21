@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobile25a/pages/album_page.dart';
 import 'package:mobile25a/pages/home_page.dart';
+import 'package:mobile25a/pages/note_page.dart';
 import 'package:mobile25a/pages/profile_page.dart';
 import 'package:mobile25a/pages/setting_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -29,6 +30,7 @@ class MainApp extends StatelessWidget {
         '/setting': (context) => SettingPage(),
         '/profile': (context) => ProfilePage(),
         '/album': (context) => AlbumPage(),
+        '/note': (context) => NotePage(),
       },
       // home: Scaffold(body: Center(child: Text("halo"))),
     );
