@@ -67,6 +67,12 @@ class _NotePageState extends State<NotePage> {
           },
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.pushNamed(context, '/note/new');
+        },
+        child: const Icon(Icons.add),
+      ),
     );
   }
 }
