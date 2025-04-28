@@ -32,7 +32,7 @@ class MainApp extends StatelessWidget {
         '/profile': (context) => ProfilePage(),
         '/album': (context) => AlbumPage(),
         '/note': (context) => NotePage(),
-        '/note/new': (context) => NoteEditPage(),
+        '/note/edit': (context) => NoteEditPage(),
       },
       // home: Scaffold(body: Center(child: Text("halo"))),
     );

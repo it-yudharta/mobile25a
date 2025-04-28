@@ -48,6 +48,20 @@ class _NotePageState extends State<NotePage> {
     futureNote = fetchNote();
   }
 
+  Future<void> _editNotePage(BuildContext context, Object? arguments) async {
+    final result = await Navigator.pushNamed(
+      context,
+      '/note/edit',
+      arguments: arguments,
+    );
+
+    if (result == 'OK') {
+      setState(() {
+        futureNote = fetchNote();
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,7 +71,20 @@ class _NotePageState extends State<NotePage> {
           future: futureNote,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              return Text(snapshot.data.toString());
+              // return Text(snapshot.data.toString());
+              return ListView.builder(
+                itemCount: snapshot.data.length,
+                itemBuilder: (context, index) {
+                  final note = Note.fromJson(snapshot.data[index]);
+                  return ListTile(
+                    title: Text(note.title),
+                    subtitle: Text(note.description ?? ''),
+                    onTap: () {
+                      _editNotePage(context, note);
+                    },
+                  );
+                },
+              );
             } else if (snapshot.hasError) {
               return Text('${snapshot.error}');
             }
@@ -69,7 +96,7 @@ class _NotePageState extends State<NotePage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.pushNamed(context, '/note/new');
+          _editNotePage(context, null);
         },
         child: const Icon(Icons.add),
       ),

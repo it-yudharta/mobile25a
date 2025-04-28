@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile25a/pages/note_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class NoteEditPage extends StatefulWidget {
@@ -9,6 +10,8 @@ class NoteEditPage extends StatefulWidget {
 }
 
 class _NoteEditPageState extends State<NoteEditPage> {
+  Note? note;
+
   final _formKey = GlobalKey<FormState>();
   String title = '';
   String description = '';
@@ -17,20 +20,38 @@ class _NoteEditPageState extends State<NoteEditPage> {
     if (_formKey.currentState!.validate()) {
       final supabase = Supabase.instance.client;
 
-      // Simpan catatan ke database
-      await supabase.from('notes').insert({
-        'title': title,
-        'description': description,
-      });
+      // Jika note tidak null, maka kita update
+      if (note != null) {
+        await supabase
+            .from('notes')
+            .update({'title': title, 'description': description})
+            .eq('id', note?.id ?? '');
+      } else {
+        // Jika note null, maka kita insert
+        await supabase.from('notes').insert({
+          'title': title,
+          'description': description,
+        });
+      }
 
-      Navigator.pop(context);
+      Navigator.pop<String>(context, 'OK');
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    note = ModalRoute.of(context)!.settings.arguments as Note?;
+    if (note != null) {
+      setState(() {
+        title = note?.title ?? '';
+        description = note?.description ?? '';
+      });
+    }
+
     return Scaffold(
-      appBar: AppBar(title: const Text("Buat Catatan Baru")),
+      appBar: AppBar(
+        title: Text("${(note != null) ? 'Edit' : 'Buat'} Catatan"),
+      ),
       body: Form(
         key: _formKey,
         child: Column(
@@ -43,6 +64,7 @@ class _NoteEditPageState extends State<NoteEditPage> {
                 }
                 return null;
               },
+              initialValue: title,
               onChanged: (value) {
                 setState(() {
                   title = value;
@@ -51,6 +73,7 @@ class _NoteEditPageState extends State<NoteEditPage> {
             ),
             TextFormField(
               decoration: const InputDecoration(labelText: 'Deskripsi'),
+              initialValue: description,
               onChanged: (value) {
                 setState(() {
                   description = value;
