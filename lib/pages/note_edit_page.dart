@@ -40,7 +40,28 @@ class _NoteEditPageState extends State<NoteEditPage> {
   }
 
   Future delete() async {
-    if (note != null) {
+    // tampilkan dialog konfirmasi sebelum menghapus
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Konfirmasi'),
+          content: const Text('Apakah Anda yakin ingin menghapus catatan ini?'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: const Text('Batal'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: const Text('Hapus'),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (confirmed == true) {
       final supabase = Supabase.instance.client;
       await supabase.from('notes').delete().eq('id', note?.id ?? '');
       Navigator.pop<String>(context, 'OK');
@@ -61,9 +82,12 @@ class _NoteEditPageState extends State<NoteEditPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("${(note != null) ? 'Edit' : 'Buat'} Catatan"),
-        actions: [
-          IconButton(icon: const Icon(Icons.delete), onPressed: delete),
-        ],
+        actions:
+            (note != null)
+                ? [
+                  IconButton(icon: const Icon(Icons.delete), onPressed: delete),
+                ]
+                : [],
       ),
       body: Form(
         key: _formKey,
