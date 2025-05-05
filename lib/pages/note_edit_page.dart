@@ -20,6 +20,7 @@ class _NoteEditPageState extends State<NoteEditPage> {
   Future save() async {
     if (_formKey.currentState!.validate()) {
       final supabase = Supabase.instance.client;
+      String message = 'Berhasil menyimpan catatan';
 
       // Jika note tidak null, maka kita update
       if (note != null) {
@@ -27,6 +28,7 @@ class _NoteEditPageState extends State<NoteEditPage> {
             .from('notes')
             .update({'title': title, 'description': description})
             .eq('id', note?.id ?? '');
+        message = 'Berhasil mengubah catatan';
       } else {
         // Jika note null, maka kita insert
         await supabase.from('notes').insert({
@@ -35,6 +37,9 @@ class _NoteEditPageState extends State<NoteEditPage> {
         });
       }
 
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(message)));
       Navigator.pop<String>(context, 'OK');
     }
   }
@@ -64,6 +69,10 @@ class _NoteEditPageState extends State<NoteEditPage> {
     if (confirmed == true) {
       final supabase = Supabase.instance.client;
       await supabase.from('notes').delete().eq('id', note?.id ?? '');
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('berhasil menghapus catatan')));
+
       Navigator.pop<String>(context, 'OK');
     }
   }
