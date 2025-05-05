@@ -11,6 +11,7 @@ class NoteEditPage extends StatefulWidget {
 
 class _NoteEditPageState extends State<NoteEditPage> {
   Note? note;
+  bool initialized = false;
 
   final _formKey = GlobalKey<FormState>();
   String title = '';
@@ -41,11 +42,12 @@ class _NoteEditPageState extends State<NoteEditPage> {
   @override
   Widget build(BuildContext context) {
     note = ModalRoute.of(context)!.settings.arguments as Note?;
-    if (note != null) {
+    if (note != null && !initialized) {
       setState(() {
         title = note?.title ?? '';
         description = note?.description ?? '';
       });
+      initialized = true;
     }
 
     return Scaffold(
