@@ -39,6 +39,14 @@ class _NoteEditPageState extends State<NoteEditPage> {
     }
   }
 
+  Future delete() async {
+    if (note != null) {
+      final supabase = Supabase.instance.client;
+      await supabase.from('notes').delete().eq('id', note?.id ?? '');
+      Navigator.pop<String>(context, 'OK');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     note = ModalRoute.of(context)!.settings.arguments as Note?;
@@ -53,6 +61,9 @@ class _NoteEditPageState extends State<NoteEditPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("${(note != null) ? 'Edit' : 'Buat'} Catatan"),
+        actions: [
+          IconButton(icon: const Icon(Icons.delete), onPressed: delete),
+        ],
       ),
       body: Form(
         key: _formKey,
